@@ -1019,6 +1019,7 @@ function showSedeClicks(sede) {
     const pct = (100 * p.c / totalClicks).toFixed(1);
     html += '<tr><td>' + (i+1) + '</td><td>' + p.n + '</td><td class="num-cell"><strong>' + p.c + '</strong></td><td class="num-cell">' + pct + '%</td></tr>';
   });
+  html += '<tr class="highlight-row" style="border-top:2px solid #1a2744"><td></td><td><strong>TOTAL</strong></td><td class="num-cell"><strong>' + totalClicks.toLocaleString() + '</strong></td><td class="num-cell"><strong>100%</strong></td></tr>';
   html += '</tbody></table>';
   openModal(title, html, proms.length + ' promotoras | ' + totalClicks.toLocaleString() + ' clicks totales');
 }
