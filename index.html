@@ -207,12 +207,12 @@
     <div class="kpi green">
       <div class="value">20.2%</div>
       <div class="label">Lead &rarr; Solicitud</div>
-      <div class="detail">699 DNIs con solicitud de 3,457</div>
+      <div class="detail">712 DNIs con solicitud de 3,457</div>
     </div>
     <div class="kpi accent">
-      <div class="value">199</div>
+      <div class="value">204</div>
       <div class="label">Firmas</div>
-      <div class="detail">5.8% de leads, 28.5% de solicitudes</div>
+      <div class="detail">5.9% de leads, 28.7% de solicitudes</div>
     </div>
   </div>
   <div class="kpi-grid" style="grid-template-columns: 1fr 1fr;">
@@ -445,7 +445,7 @@
 <!-- ========== FUNNEL ========== -->
 <section id="funnel" class="section">
   <div class="section-title"><span class="num">4</span> Funnel de Conversion (Lead &rarr; Solicitud &rarr; Firma)</div>
-  <div class="section-desc">Cruce por DNI entre leads capturados en el hub (Postgres) y solicitudes en el sistema core (MySQL). Periodo: septiembre 2026.</div>
+  <div class="section-desc">Cruce por DNI entre leads capturados en el hub (Postgres) y solicitudes en el sistema core (MySQL). Solo se cuentan solicitudes creadas el mismo dia o despues del registro del lead (orden temporal validado). Periodo: septiembre 2026.</div>
 
   <div class="card-grid">
     <div class="card">
@@ -458,19 +458,19 @@
         </div>
         <div class="funnel-arrow">&darr;</div>
         <div class="funnel-step">
-          <div class="funnel-bar" style="width:22.1%;background:var(--blue)">699</div>
+          <div class="funnel-bar" style="width:22.1%;background:var(--blue)">712</div>
           <div><div class="funnel-label">Generaron solicitud</div><div class="funnel-detail">Llenaron formulario en la web</div></div>
           <div class="funnel-pct">20.2%</div>
         </div>
         <div class="funnel-arrow">&darr;</div>
         <div class="funnel-step">
-          <div class="funnel-bar" style="width:15.5%;background:var(--green)">534</div>
-          <div><div class="funnel-label">Aprobadas + en revision</div><div class="funnel-detail">273 aprobadas, 261 en revision</div></div>
-          <div class="funnel-pct">15.5%</div>
+          <div class="funnel-bar" style="width:15.8%;background:var(--green)">547</div>
+          <div><div class="funnel-label">Aprobadas + en revision</div><div class="funnel-detail">274 aprobadas, 273 en revision</div></div>
+          <div class="funnel-pct">15.8%</div>
         </div>
         <div class="funnel-arrow">&darr;</div>
         <div class="funnel-step">
-          <div class="funnel-bar" style="width:5.8%;background:var(--accent)">199</div>
+          <div class="funnel-bar" style="width:5.9%;background:var(--accent)">204</div>
           <div><div class="funnel-label">Firmaron contrato</div><div class="funnel-detail">Contrato firmado por el estudiante</div></div>
           <div class="funnel-pct">5.8%</div>
         </div>
@@ -482,7 +482,7 @@
         </div>
       </div>
       <div class="alert alert-orange" style="margin-top:10px">
-        <strong>165 rechazadas</strong> (23.6% de las 699 personas con solicitud). Caida principal: del lead a la solicitud &mdash; el 79.8% de leads no genera solicitud.
+        <strong>165 rechazadas</strong> (23.2% de las 712 personas con solicitud). Caida principal: del lead a la solicitud &mdash; el 79.8% de leads no genera solicitud.
       </div>
     </div>
 
@@ -492,35 +492,35 @@
         <thead><tr><th>Etapa</th><th class="num-cell">Personas</th><th class="num-cell">% de Leads</th><th class="num-cell">Nota</th></tr></thead>
         <tbody>
           <tr><td>Leads capturados (DNIs unicos)</td><td class="num-cell"><strong>3,457</strong></td><td class="num-cell">100%</td><td></td></tr>
-          <tr><td>Generaron solicitud</td><td class="num-cell"><strong>699</strong></td><td class="num-cell">20.2%</td><td></td></tr>
-          <tr><td>&nbsp;&nbsp;&rarr; Aprobadas</td><td class="num-cell">273</td><td class="num-cell">7.9%</td><td></td></tr>
-          <tr><td>&nbsp;&nbsp;&rarr; En revision</td><td class="num-cell">261</td><td class="num-cell">7.6%</td><td></td></tr>
+          <tr><td>Generaron solicitud</td><td class="num-cell"><strong>712</strong></td><td class="num-cell">20.2%</td><td></td></tr>
+          <tr><td>&nbsp;&nbsp;&rarr; Aprobadas</td><td class="num-cell">274</td><td class="num-cell">7.9%</td><td></td></tr>
+          <tr><td>&nbsp;&nbsp;&rarr; En revision</td><td class="num-cell">273</td><td class="num-cell">7.9%</td><td></td></tr>
           <tr><td>&nbsp;&nbsp;&rarr; Rechazadas</td><td class="num-cell">165</td><td class="num-cell">4.8%</td><td></td></tr>
-          <tr class="highlight-row"><td><strong>Firmaron contrato</strong></td><td class="num-cell"><strong>199</strong></td><td class="num-cell"><strong>5.8%</strong></td><td></td></tr>
+          <tr class="highlight-row"><td><strong>Firmaron contrato</strong></td><td class="num-cell"><strong>204</strong></td><td class="num-cell"><strong>5.9%</strong></td><td></td></tr>
           <tr><td>Equipo entregado</td><td class="num-cell">0</td><td class="num-cell">0%</td><td>En proceso</td></tr>
-          <tr><td style="color:var(--text-light)">Sin solicitud</td><td class="num-cell" style="color:var(--text-light)">2,758</td><td class="num-cell" style="color:var(--text-light)">79.8%</td><td style="color:var(--text-light)">No avanzaron a formulario web</td></tr>
+          <tr><td style="color:var(--text-light)">Sin solicitud</td><td class="num-cell" style="color:var(--text-light)">2,812</td><td class="num-cell" style="color:var(--text-light)">79.8%</td><td style="color:var(--text-light)">No avanzaron a formulario web</td></tr>
         </tbody>
       </table>
 
-      <h3 style="margin-top:20px">Atribucion (sobre 699 personas)</h3>
+      <h3 style="margin-top:20px">Atribucion (sobre 712 personas)</h3>
       <table>
         <thead><tr><th>Metrica</th><th class="num-cell">Personas</th><th class="num-cell">%</th></tr></thead>
         <tbody>
-          <tr><td>Marcadas como activacion</td><td class="num-cell">660</td><td class="num-cell">94.4%</td></tr>
-          <tr><td>Con promotor atribuido</td><td class="num-cell">446</td><td class="num-cell">63.8%</td></tr>
-          <tr><td>Sin promotor</td><td class="num-cell">253</td><td class="num-cell">36.2%</td></tr>
+          <tr><td>Marcadas como activacion</td><td class="num-cell">675</td><td class="num-cell">94.8%</td></tr>
+          <tr><td>Con promotor atribuido</td><td class="num-cell">461</td><td class="num-cell">64.7%</td></tr>
+          <tr><td>Sin promotor</td><td class="num-cell">251</td><td class="num-cell">35.3%</td></tr>
         </tbody>
       </table>
 
-      <h3 style="margin-top:20px">Por Source (sobre 699 personas)</h3>
+      <h3 style="margin-top:20px">Por Source (sobre 712 personas)</h3>
       <table>
         <thead><tr><th>Source</th><th class="num-cell">Personas</th><th class="num-cell">%</th></tr></thead>
         <tbody>
-          <tr><td>ucv</td><td class="num-cell">501</td><td class="num-cell">71.7%</td></tr>
-          <tr><td>ucv-express</td><td class="num-cell">137</td><td class="num-cell">19.6%</td></tr>
-          <tr><td>senati</td><td class="num-cell">28</td><td class="num-cell">4.0%</td></tr>
+          <tr><td>ucv</td><td class="num-cell">501</td><td class="num-cell">70.4%</td></tr>
+          <tr><td>ucv-express</td><td class="num-cell">151</td><td class="num-cell">21.2%</td></tr>
+          <tr><td>senati</td><td class="num-cell">28</td><td class="num-cell">3.9%</td></tr>
           <tr><td>uss</td><td class="num-cell">14</td><td class="num-cell">2.0%</td></tr>
-          <tr><td>prestamo</td><td class="num-cell">11</td><td class="num-cell">1.6%</td></tr>
+          <tr><td>prestamo</td><td class="num-cell">10</td><td class="num-cell">1.4%</td></tr>
           <tr><td>uss-express</td><td class="num-cell">5</td><td class="num-cell">0.7%</td></tr>
           <tr><td>otros</td><td class="num-cell">3</td><td class="num-cell">0.4%</td></tr>
         </tbody>
@@ -531,26 +531,26 @@
   <div class="card">
     <h3>Top 14 Promotoras por Personas con Solicitud Atribuida</h3>
     <table>
-      <thead><tr><th>#</th><th>Promotora</th><th class="num-cell">Personas</th><th class="num-cell">% de 446</th></tr></thead>
+      <thead><tr><th>#</th><th>Promotora</th><th class="num-cell">Personas</th><th class="num-cell">% de 461</th></tr></thead>
       <tbody>
-        <tr><td>1</td><td>Alexander Abel Chuquihuanga Ramos</td><td class="num-cell"><strong>51</strong></td><td class="num-cell">11.4%</td></tr>
-        <tr><td>2</td><td>Yulitza Coromoto Pinto Hernandez</td><td class="num-cell"><strong>49</strong></td><td class="num-cell">11.0%</td></tr>
-        <tr><td>3</td><td>Alejandra de los Milagros Facho Diaz</td><td class="num-cell"><strong>45</strong></td><td class="num-cell">10.1%</td></tr>
-        <tr><td>4</td><td>Yrene Vasquez Gomez</td><td class="num-cell"><strong>42</strong></td><td class="num-cell">9.4%</td></tr>
-        <tr><td>5</td><td>Raichel Geraldine Ysidro Tocto</td><td class="num-cell"><strong>25</strong></td><td class="num-cell">5.6%</td></tr>
-        <tr><td>6</td><td>Marisol Graciela Sayago Ramirez</td><td class="num-cell"><strong>18</strong></td><td class="num-cell">4.0%</td></tr>
-        <tr><td>7</td><td>Amira Jamila Alegre Ormeno</td><td class="num-cell"><strong>15</strong></td><td class="num-cell">3.4%</td></tr>
-        <tr><td>8</td><td>Melanie Denisse Aburto Dominguez</td><td class="num-cell"><strong>12</strong></td><td class="num-cell">2.7%</td></tr>
-        <tr><td>9</td><td>Josselin Antuane Mosquera Palacios</td><td class="num-cell"><strong>12</strong></td><td class="num-cell">2.7%</td></tr>
-        <tr><td>10</td><td>Evelyn Cristina Garcia Noa</td><td class="num-cell"><strong>12</strong></td><td class="num-cell">2.7%</td></tr>
-        <tr><td>11</td><td>Carolay Yessenia Pacaya Pinedo</td><td class="num-cell"><strong>11</strong></td><td class="num-cell">2.5%</td></tr>
-        <tr><td>12</td><td>Karolay Silva Perez</td><td class="num-cell"><strong>11</strong></td><td class="num-cell">2.5%</td></tr>
-        <tr><td>13</td><td>Sheshira Shiomara Garcia Noa</td><td class="num-cell"><strong>11</strong></td><td class="num-cell">2.5%</td></tr>
+        <tr><td>1</td><td>Alexander Abel Chuquihuanga Ramos</td><td class="num-cell"><strong>55</strong></td><td class="num-cell">11.9%</td></tr>
+        <tr><td>2</td><td>Yulitza Coromoto Pinto Hernandez</td><td class="num-cell"><strong>54</strong></td><td class="num-cell">11.7%</td></tr>
+        <tr><td>3</td><td>Alejandra de los Milagros Facho Diaz</td><td class="num-cell"><strong>50</strong></td><td class="num-cell">10.8%</td></tr>
+        <tr><td>4</td><td>Yrene Vasquez Gomez</td><td class="num-cell"><strong>42</strong></td><td class="num-cell">9.1%</td></tr>
+        <tr><td>5</td><td>Raichel Geraldine Ysidro Tocto</td><td class="num-cell"><strong>26</strong></td><td class="num-cell">5.6%</td></tr>
+        <tr><td>6</td><td>Marisol Graciela Sayago Ramirez</td><td class="num-cell"><strong>18</strong></td><td class="num-cell">3.9%</td></tr>
+        <tr><td>7</td><td>Amira Jamila Alegre Ormeno</td><td class="num-cell"><strong>15</strong></td><td class="num-cell">3.3%</td></tr>
+        <tr><td>8</td><td>Melanie Denisse Aburto Dominguez</td><td class="num-cell"><strong>12</strong></td><td class="num-cell">2.6%</td></tr>
+        <tr><td>9</td><td>Josselin Antuane Mosquera Palacios</td><td class="num-cell"><strong>12</strong></td><td class="num-cell">2.6%</td></tr>
+        <tr><td>10</td><td>Evelyn Cristina Garcia Noa</td><td class="num-cell"><strong>12</strong></td><td class="num-cell">2.6%</td></tr>
+        <tr><td>11</td><td>Carolay Yessenia Pacaya Pinedo</td><td class="num-cell"><strong>11</strong></td><td class="num-cell">2.4%</td></tr>
+        <tr><td>12</td><td>Karolay Silva Perez</td><td class="num-cell"><strong>11</strong></td><td class="num-cell">2.4%</td></tr>
+        <tr><td>13</td><td>Sheshira Shiomara Garcia Noa</td><td class="num-cell"><strong>11</strong></td><td class="num-cell">2.4%</td></tr>
         <tr><td>14</td><td>75184107</td><td class="num-cell"><strong>10</strong></td><td class="num-cell">2.2%</td></tr>
       </tbody>
     </table>
     <div class="alert alert-orange" style="margin-top:10px">
-      <strong>253 personas (36.2%) sin promotor atribuido.</strong> El estudiante llego por otro canal despues de la captura del lead, o la atribucion por UTMs no funciono.
+      <strong>251 personas (35.3%) sin promotor atribuido.</strong> El estudiante llego por otro canal despues de la captura del lead, o la atribucion por UTMs no funciono.
     </div>
   </div>
 </section>
@@ -588,7 +588,7 @@
     <div class="kpi green">
       <div class="value">20.2%</div>
       <div class="label">Lead &rarr; Solicitud</div>
-      <div class="detail">699 de 3,457 DNIs</div>
+      <div class="detail">712 de 3,457 DNIs</div>
     </div>
   </div>
 
@@ -860,7 +860,7 @@
       <div><strong>4. Tardanza generalizada.</strong> 47.9% de check-ins con tardanza, promedio 37.5 min. Extremos de >500 min sugieren check-ins retroactivos o fuera de horario.</div>
     </div>
     <div class="alert alert-orange">
-      <div><strong>5. Conversion lead&rarr;solicitud del 20.2%.</strong> De 3,457 leads capturados, 699 personas generaron solicitud. 199 firmaron contrato (5.8%). El cuello de botella principal es del lead a la solicitud: el 79.8% no avanza. 253 personas (36.2%) sin promotor atribuido en la solicitud.</div>
+      <div><strong>5. Conversion lead&rarr;solicitud del 20.2%.</strong> De 3,457 leads capturados, 712 personas generaron solicitud (posterior al registro del lead). 204 firmaron contrato (5.9%). El cuello de botella principal es del lead a la solicitud: el 79.8% no avanza. 251 personas (35.3%) sin promotor atribuido.</div>
     </div>
     <div class="alert alert-orange">
       <div><strong>6. Custodia no se usa.</strong> 0 custodias registradas en septiembre. Las promotoras no escanean al recoger paquetes fisicos, lo que impide rastrear la cadena de distribucion.</div>
