@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reporte Activaciones Hub - Septiembre 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --primary: #1a2744;
+    --primary-light: #2a3f6a;
+    --accent: #e8a838;
+    --accent-dark: #c78a1e;
+    --bg: #f4f6f9;
+    --card: #ffffff;
+    --text: #2c3e50;
+    --text-light: #6b7c93;
+    --border: #e1e8ef;
+    --green: #27ae60;
+    --red: #e74c3c;
+    --orange: #f39c12;
+    --blue: #3498db;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+
+  /* Header */
+  .header { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); color: white; padding: 40px 0 30px; }
+  .header-inner { max-width: 1200px; margin: 0 auto; padding: 0 30px; display: flex; justify-content: space-between; align-items: flex-start; }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  .header .subtitle { font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 4px; }
+  .header .logo-area { text-align: right; }
+  .header .logo-area .brand { font-size: 22px; font-weight: 800; color: var(--accent); letter-spacing: 1px; }
+  .header .logo-area .period { font-size: 13px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+
+  /* Nav */
+  .nav { background: white; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.04); }
+  .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 30px; display: flex; gap: 0; overflow-x: auto; }
+  .nav a { display: block; padding: 14px 18px; font-size: 13px; font-weight: 600; color: var(--text-light); text-decoration: none; white-space: nowrap; border-bottom: 3px solid transparent; transition: all 0.2s; }
+  .nav a:hover, .nav a.active { color: var(--primary); border-bottom-color: var(--accent); }
+
+  /* Content */
+  .container { max-width: 1200px; margin: 0 auto; padding: 30px; }
+
+  /* KPI cards */
+  .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 30px; }
+  .kpi { background: var(--card); border-radius: 10px; padding: 22px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); border-left: 4px solid var(--primary); }
+  .kpi.accent { border-left-color: var(--accent); }
+  .kpi.green { border-left-color: var(--green); }
+  .kpi.red { border-left-color: var(--red); }
+  .kpi.orange { border-left-color: var(--orange); }
+  .kpi.blue { border-left-color: var(--blue); }
+  .kpi .value { font-size: 32px; font-weight: 800; color: var(--primary); line-height: 1.1; }
+  .kpi .label { font-size: 12px; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 6px; }
+  .kpi .detail { font-size: 12px; color: var(--text-light); margin-top: 4px; }
+
+  /* Sections */
+  .section { margin-bottom: 40px; }
+  .section-title { font-size: 20px; font-weight: 700; color: var(--primary); margin-bottom: 6px; padding-bottom: 10px; border-bottom: 2px solid var(--accent); display: flex; align-items: center; gap: 10px; }
+  .section-title .num { background: var(--primary); color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .section-desc { font-size: 14px; color: var(--text-light); margin-bottom: 20px; }
+
+  /* Cards */
+  .card { background: var(--card); border-radius: 10px; padding: 24px; box-shadow: 0 1px 4px rgba(0,0,0,0.06); margin-bottom: 20px; }
+  .card h3 { font-size: 15px; font-weight: 700; color: var(--primary); margin-bottom: 14px; }
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(480px, 1fr)); gap: 20px; }
+  @media (max-width: 1024px) { .card-grid { grid-template-columns: 1fr; } }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: var(--primary); color: white; padding: 10px 12px; text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: 0.3px; }
+  tbody td { padding: 9px 12px; border-bottom: 1px solid var(--border); }
+  tbody tr:hover { background: #f8fafc; }
+  tbody tr:last-child td { border-bottom: none; }
+  .num-cell { text-align: right; font-variant-numeric: tabular-nums; font-weight: 600; }
+  .highlight-row { background: #fffbeb; }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700; }
+  .badge-green { background: #d4edda; color: #155724; }
+  .badge-red { background: #f8d7da; color: #721c24; }
+  .badge-orange { background: #fff3cd; color: #856404; }
+  .badge-blue { background: #d1ecf1; color: #0c5460; }
+
+  /* Charts */
+  .chart-container { position: relative; height: 300px; margin: 10px 0; }
+  .chart-container canvas { cursor: pointer; }
+  .chart-container.tall { height: 380px; }
+
+  /* Alerts */
+  .alert { padding: 14px 18px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; display: flex; gap: 10px; align-items: flex-start; }
+  .alert-red { background: #fdf0f0; border-left: 4px solid var(--red); }
+  .alert-orange { background: #fef9ed; border-left: 4px solid var(--orange); }
+  .alert-green { background: #edf7ed; border-left: 4px solid var(--green); }
+  .alert strong { font-weight: 700; }
+
+  /* Footer */
+  .footer { background: var(--primary); color: rgba(255,255,255,0.6); padding: 24px 0; text-align: center; font-size: 12px; margin-top: 40px; }
+  .footer strong { color: var(--accent); }
+
+  /* Funnel */
+  .funnel { display: flex; flex-direction: column; gap: 0; align-items: center; margin: 20px 0; }
+  .funnel-step { display: flex; align-items: center; gap: 16px; width: 100%; max-width: 750px; padding: 14px 20px; position: relative; }
+  .funnel-bar { height: 48px; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 15px; min-width: 60px; transition: all 0.3s; }
+  .funnel-label { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; }
+  .funnel-detail { font-size: 12px; color: var(--text-light); }
+  .funnel-arrow { text-align: center; color: var(--text-light); font-size: 18px; margin: -4px 0; }
+  .funnel-pct { font-size: 13px; font-weight: 700; color: var(--primary); min-width: 55px; text-align: right; }
+
+  /* Modal */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; justify-content: center; align-items: center; }
+  .modal-overlay.active { display: flex; }
+  .modal { background: white; border-radius: 12px; width: 90%; max-width: 650px; max-height: 80vh; display: flex; flex-direction: column; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+  .modal-header h3 { font-size: 17px; color: var(--primary); }
+  .modal-header .modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--text-light); padding: 4px 8px; border-radius: 6px; }
+  .modal-header .modal-close:hover { background: #f0f0f0; color: var(--text); }
+  .modal-body { overflow-y: auto; padding: 0; flex: 1; }
+  .modal-body table { margin: 0; }
+  .modal-body thead th { position: sticky; top: 0; z-index: 1; }
+  .modal-footer { padding: 14px 24px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-light); text-align: right; flex-shrink: 0; }
+
+  /* Print */
+  @media print {
+    .nav { display: none; }
+    .header { padding: 20px 0; }
+    .container { padding: 15px; }
+    .card { break-inside: avoid; box-shadow: none; border: 1px solid #ddd; }
+    .chart-container { height: 250px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div>
+      <h1>Reporte de Activaciones Hub</h1>
+      <div class="subtitle">Uso del App de Promotoras & Metricas de Flyers</div>
+    </div>
+    <div class="logo-area">
+      <div class="brand">BALDECASH</div>
+      <div class="period">Septiembre 2026 (01-16 Sep)</div>
+      <div class="period">Generado: 16 Sep 2026</div>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <div class="nav-inner">
+    <a href="#resumen" class="active">Resumen</a>
+    <a href="#uso-app">Uso del App</a>
+    <a href="#asistencia">Asistencia</a>
+    <a href="#leads">Leads</a>
+    <a href="#funnel">Funnel</a>
+    <a href="#flyers">Flyers</a>
+    <a href="#flyer-detalle">Flyer Detalle</a>
+    <a href="#hallazgos">Hallazgos</a>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ========== RESUMEN ========== -->
+<section id="resumen" class="section">
+  <div class="section-title"><span class="num">0</span> Resumen Ejecutivo</div>
+  <div class="section-desc">Periodo: 01 al 16 de septiembre 2026 (16 dias). Fuente: Aurora PostgreSQL (acthub_*).</div>
+
+  <div class="kpi-grid">
+    <div class="kpi">
+      <div class="value">2,981</div>
+      <div class="label">Logins Exitosos</div>
+      <div class="detail">70 promotoras unicas</div>
+    </div>
+    <div class="kpi accent">
+      <div class="value">409</div>
+      <div class="label">Check-ins</div>
+      <div class="detail">51 promotoras, 14 dias</div>
+    </div>
+    <div class="kpi green">
+      <div class="value">3,457</div>
+      <div class="label">Leads Registrados</div>
+      <div class="detail">43 promotoras activas</div>
+    </div>
+    <div class="kpi blue">
+      <div class="value">2,459</div>
+      <div class="label">Escaneos de Flyers</div>
+      <div class="detail">89 tokens, 52 promotoras</div>
+    </div>
+    <div class="kpi orange">
+      <div class="value">2,349</div>
+      <div class="label">Clicks en Referidos</div>
+      <div class="detail">131 links unicos</div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi red">
+      <div class="value">2.2%</div>
+      <div class="label">Seguimiento Manual</div>
+      <div class="detail">76 de 3,457 leads contactados por promotoras</div>
+    </div>
+    <div class="kpi orange">
+      <div class="value">20.3%</div>
+      <div class="label">Seguimiento Total</div>
+      <div class="detail">701 de 3,457 leads (76 manual + 625 automatizacion)</div>
+    </div>
+    <div class="kpi green">
+      <div class="value">20.2%</div>
+      <div class="label">Lead &rarr; Solicitud</div>
+      <div class="detail">699 DNIs con solicitud de 3,457</div>
+    </div>
+    <div class="kpi accent">
+      <div class="value">199</div>
+      <div class="label">Firmas</div>
+      <div class="detail">5.8% de leads, 28.5% de solicitudes</div>
+    </div>
+  </div>
+  <div class="kpi-grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="alert alert-red" style="margin-bottom:0;">
+      <div><strong>CRITICO:</strong> Solo 2.2% de leads tiene seguimiento manual por promotoras. Con automatizacion sube a 20.3% (701 de 3,457), pero el 79.7% no tiene contacto.</div>
+    </div>
+    <div class="alert alert-orange" style="margin-bottom:0;">
+      <div><strong>ATENCION:</strong> Solo el 25.4% de promotoras registradas (70 de 276) inicio sesion en septiembre. El 74.6% no usa la app.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== USO DEL APP ========== -->
+<section id="uso-app" class="section">
+  <div class="section-title"><span class="num">1</span> Uso del App por Promotoras</div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Logins Exitosos por Dia</h3>
+      <div class="chart-container"><canvas id="chartLoginsDia"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Universo de Promotoras</h3>
+      <table>
+        <thead><tr><th>Metrica</th><th class="num-cell">Valor</th></tr></thead>
+        <tbody>
+          <tr><td>Registradas (no mock)</td><td class="num-cell">276</td></tr>
+          <tr><td>Con login en septiembre</td><td class="num-cell">70 (25.4%)</td></tr>
+          <tr><td>Con check-in en septiembre</td><td class="num-cell">51 (18.5%)</td></tr>
+          <tr><td>Generando leads</td><td class="num-cell">42 (15.2%)</td></tr>
+          <tr class="highlight-row"><td>Sin actividad en septiembre</td><td class="num-cell"><strong>206 (74.6%)</strong></td></tr>
+        </tbody>
+      </table>
+      <br>
+      <h3>Logins Fallidos</h3>
+      <table>
+        <thead><tr><th>Motivo</th><th class="num-cell">Intentos</th><th class="num-cell">Emails</th></tr></thead>
+        <tbody>
+          <tr><td>Password incorrecto</td><td class="num-cell">320</td><td class="num-cell">38</td></tr>
+          <tr><td>Email no existe</td><td class="num-cell">46</td><td class="num-cell">11</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Dispositivos Utilizados (Sep 2026)</h3>
+    <div class="card-grid">
+      <div>
+        <div class="chart-container" style="height:260px"><canvas id="chartDispositivos"></canvas></div>
+      </div>
+      <div>
+        <table>
+          <thead><tr><th>Plataforma</th><th>Navegador</th><th class="num-cell">Dispositivos</th><th class="num-cell">Promotoras</th></tr></thead>
+          <tbody>
+            <tr><td>Android</td><td>Chrome</td><td class="num-cell">67</td><td class="num-cell">47</td></tr>
+            <tr><td>Windows</td><td>Chrome</td><td class="num-cell">56</td><td class="num-cell">47</td></tr>
+            <tr><td>iOS</td><td>Safari</td><td class="num-cell">45</td><td class="num-cell">30</td></tr>
+            <tr><td>Android</td><td>Samsung Internet</td><td class="num-cell">9</td><td class="num-cell">9</td></tr>
+            <tr><td>macOS</td><td>Chrome</td><td class="num-cell">9</td><td class="num-cell">7</td></tr>
+            <tr><td>Linux</td><td>Chrome</td><td class="num-cell">6</td><td class="num-cell">6</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ASISTENCIA ========== -->
+<section id="asistencia" class="section">
+  <div class="section-title"><span class="num">2</span> Asistencia y Marcaciones</div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Marcaciones por Tipo</h3>
+      <table>
+        <thead><tr><th>Tipo</th><th class="num-cell">Total</th><th class="num-cell">Promotoras</th><th class="num-cell">Dias</th></tr></thead>
+        <tbody>
+          <tr><td>Check-in</td><td class="num-cell">409</td><td class="num-cell">51</td><td class="num-cell">14</td></tr>
+          <tr><td>Check-out</td><td class="num-cell">361</td><td class="num-cell">48</td><td class="num-cell">15</td></tr>
+          <tr><td>Break inicio</td><td class="num-cell">369</td><td class="num-cell">46</td><td class="num-cell">14</td></tr>
+          <tr><td>Break fin</td><td class="num-cell">366</td><td class="num-cell">46</td><td class="num-cell">14</td></tr>
+          <tr><td>Modulo</td><td class="num-cell">118</td><td class="num-cell">18</td><td class="num-cell">14</td></tr>
+          <tr class="highlight-row"><td><strong>Total</strong></td><td class="num-cell"><strong>1,623</strong></td><td class="num-cell"><strong>51</strong></td><td class="num-cell"><strong>14</strong></td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-orange" style="margin-top:14px">
+        <strong>48 check-ins sin checkout</strong> (11.7%) &mdash; jornadas incompletas.
+      </div>
+    </div>
+    <div class="card">
+      <h3>Check-ins y Checkouts por Dia</h3>
+      <div class="chart-container"><canvas id="chartMarcDia"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Tardanzas en Check-in</h3>
+    <div class="card-grid">
+      <div>
+        <div class="chart-container"><canvas id="chartTardanzas"></canvas></div>
+      </div>
+      <div>
+        <div class="kpi-grid" style="grid-template-columns: 1fr 1fr;">
+          <div class="kpi red">
+            <div class="value">47.9%</div>
+            <div class="label">Check-ins con tardanza</div>
+            <div class="detail">196 de 409</div>
+          </div>
+          <div class="kpi orange">
+            <div class="value">37.5 min</div>
+            <div class="label">Promedio tardanza</div>
+            <div class="detail">Max: 503 min</div>
+          </div>
+        </div>
+        <table style="margin-top:14px">
+          <thead><tr><th>Fecha</th><th class="num-cell">Check-ins</th><th class="num-cell">Con tardanza</th><th class="num-cell">Prom. min</th><th class="num-cell">Max min</th></tr></thead>
+          <tbody>
+            <tr><td>01 Sep</td><td class="num-cell">31</td><td class="num-cell">15</td><td class="num-cell">84.3</td><td class="num-cell">501</td></tr>
+            <tr><td>03 Sep</td><td class="num-cell">37</td><td class="num-cell">19</td><td class="num-cell">58.0</td><td class="num-cell">503</td></tr>
+            <tr><td>05 Sep</td><td class="num-cell">30</td><td class="num-cell">20</td><td class="num-cell">60.5</td><td class="num-cell">358</td></tr>
+            <tr><td>11 Sep</td><td class="num-cell">35</td><td class="num-cell">17</td><td class="num-cell">43.5</td><td class="num-cell">231</td></tr>
+            <tr><td>16 Sep</td><td class="num-cell">27</td><td class="num-cell">19</td><td class="num-cell">45.9</td><td class="num-cell">270</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== LEADS ========== -->
+<section id="leads" class="section">
+  <div class="section-title"><span class="num">3</span> Leads</div>
+
+  <div class="card">
+    <h3>Leads Registrados por Dia</h3>
+    <div class="chart-container tall"><canvas id="chartLeadsDia"></canvas></div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Leads por Hora del Dia</h3>
+      <div class="chart-container"><canvas id="chartLeadsHora"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Leads por Dia de Semana</h3>
+      <div class="chart-container"><canvas id="chartLeadsDow"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Top 15 Promotoras por Leads</h3>
+      <table>
+        <thead><tr><th>#</th><th>Nombre</th><th class="num-cell">Leads</th><th class="num-cell">Marcac.</th><th class="num-cell">Logins</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Yrene Vasquez Gomez</td><td class="num-cell"><strong>294</strong></td><td class="num-cell">48</td><td class="num-cell">275</td></tr>
+          <tr><td>2</td><td>Melanie Aburto Dominguez</td><td class="num-cell"><strong>198</strong></td><td class="num-cell">51</td><td class="num-cell">897</td></tr>
+          <tr><td>3</td><td>Marisol Sayago Ramirez</td><td class="num-cell"><strong>196</strong></td><td class="num-cell">41</td><td class="num-cell">14</td></tr>
+          <tr><td>4</td><td>Yulitza Pinto Hernandez</td><td class="num-cell"><strong>136</strong></td><td class="num-cell">55</td><td class="num-cell">0</td></tr>
+          <tr><td>5</td><td>Evelyn Garcia Noa</td><td class="num-cell"><strong>124</strong></td><td class="num-cell">52</td><td class="num-cell">185</td></tr>
+          <tr><td>6</td><td>Alejandra Facho Diaz</td><td class="num-cell"><strong>104</strong></td><td class="num-cell">53</td><td class="num-cell">0</td></tr>
+          <tr><td>7</td><td>Alexander Chuquihuanga</td><td class="num-cell"><strong>102</strong></td><td class="num-cell">68</td><td class="num-cell">0</td></tr>
+          <tr><td>8</td><td>Sheshira Garcia Noa</td><td class="num-cell"><strong>100</strong></td><td class="num-cell">49</td><td class="num-cell">291</td></tr>
+          <tr><td>9</td><td>Sandra Romero Cedamanos</td><td class="num-cell"><strong>95</strong></td><td class="num-cell">64</td><td class="num-cell">5</td></tr>
+          <tr><td>10</td><td>Celeste Ramos Villanueva</td><td class="num-cell"><strong>92</strong></td><td class="num-cell">40</td><td class="num-cell">4</td></tr>
+          <tr><td>11</td><td>Carolay Pacaya Pinedo</td><td class="num-cell"><strong>84</strong></td><td class="num-cell">48</td><td class="num-cell">9</td></tr>
+          <tr><td>12</td><td>Almudena Huaman Alegre</td><td class="num-cell"><strong>72</strong></td><td class="num-cell">42</td><td class="num-cell">142</td></tr>
+          <tr><td>13</td><td>Marcela Salinas Trebejo</td><td class="num-cell"><strong>71</strong></td><td class="num-cell">41</td><td class="num-cell">335</td></tr>
+          <tr><td>14</td><td>Genesis Fernandez Sanchez</td><td class="num-cell"><strong>69</strong></td><td class="num-cell">50</td><td class="num-cell">9</td></tr>
+          <tr><td>15</td><td>Jade Lopez Torres</td><td class="num-cell"><strong>68</strong></td><td class="num-cell">51</td><td class="num-cell">13</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Distribucion de Productividad</h3>
+      <div class="chart-container" style="height:220px"><canvas id="chartLeadsDistrib"></canvas></div>
+      <table style="margin-top:14px">
+        <thead><tr><th>Rango</th><th class="num-cell">Promotoras</th><th class="num-cell">Leads</th><th class="num-cell">% Total</th></tr></thead>
+        <tbody>
+          <tr style="cursor:pointer" onclick="showRangoDetail('200+')"><td><span class="badge badge-green">200+</span> Super activa</td><td class="num-cell">1</td><td class="num-cell">294</td><td class="num-cell">8.5%</td></tr>
+          <tr style="cursor:pointer" onclick="showRangoDetail('100-199')"><td><span class="badge badge-blue">100-199</span> Muy activa</td><td class="num-cell">12</td><td class="num-cell">1,705</td><td class="num-cell">49.5%</td></tr>
+          <tr style="cursor:pointer" onclick="showRangoDetail('50-99')"><td><span class="badge badge-orange">50-99</span> Activa</td><td class="num-cell">15</td><td class="num-cell">1,044</td><td class="num-cell">30.3%</td></tr>
+          <tr style="cursor:pointer" onclick="showRangoDetail('20-49')"><td>20-49 Moderada</td><td class="num-cell">9</td><td class="num-cell">345</td><td class="num-cell">10.0%</td></tr>
+          <tr style="cursor:pointer" onclick="showRangoDetail('10-19')"><td>10-19 Baja</td><td class="num-cell">3</td><td class="num-cell">41</td><td class="num-cell">1.2%</td></tr>
+          <tr style="cursor:pointer" onclick="showRangoDetail('1-9')"><td>1-9 Minima</td><td class="num-cell">3</td><td class="num-cell">15</td><td class="num-cell">0.4%</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:20px">Seguimiento de Leads</h3>
+      <table>
+        <thead><tr><th>Contactos</th><th class="num-cell">Leads</th><th class="num-cell">%</th></tr></thead>
+        <tbody>
+          <tr class="highlight-row"><td>0 (sin contacto)</td><td class="num-cell"><strong>3,381</strong></td><td class="num-cell"><strong>97.8%</strong></td></tr>
+          <tr><td>1 contacto</td><td class="num-cell">51</td><td class="num-cell">1.5%</td></tr>
+          <tr><td>2+ contactos</td><td class="num-cell">25</td><td class="num-cell">0.7%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Activaciones con Mayor Volumen de Leads</h3>
+    <table>
+      <thead><tr><th>Activacion</th><th>Sede</th><th>Depto</th><th class="num-cell">Leads</th><th class="num-cell">Promotoras</th><th class="num-cell">Contactados</th><th class="num-cell">% Contacto</th></tr></thead>
+      <tbody>
+        <tr><td>HUB-2608-691</td><td>Los Olivos</td><td>Lima</td><td class="num-cell"><strong>1,188</strong></td><td class="num-cell">11</td><td class="num-cell">24</td><td class="num-cell">2.0%</td></tr>
+        <tr><td>HUB-2608-286</td><td>Piura</td><td>Piura</td><td class="num-cell"><strong>466</strong></td><td class="num-cell">6</td><td class="num-cell">3</td><td class="num-cell">0.6%</td></tr>
+        <tr><td>HUB-2608-880</td><td>Independencia</td><td>Lima</td><td class="num-cell"><strong>455</strong></td><td class="num-cell">3</td><td class="num-cell">20</td><td class="num-cell">4.4%</td></tr>
+        <tr><td>HUB-2608-474</td><td>SJL</td><td>Lima</td><td class="num-cell"><strong>315</strong></td><td class="num-cell">4</td><td class="num-cell">4</td><td class="num-cell">1.3%</td></tr>
+        <tr><td>HUB-2608-739</td><td>Chiclayo</td><td>Lambayeque</td><td class="num-cell"><strong>183</strong></td><td class="num-cell">4</td><td class="num-cell">1</td><td class="num-cell">0.5%</td></tr>
+        <tr><td>HUB-2608-445</td><td>Chimbote</td><td>Ancash</td><td class="num-cell"><strong>168</strong></td><td class="num-cell">5</td><td class="num-cell">7</td><td class="num-cell">4.2%</td></tr>
+        <tr><td>HUB-2608-539</td><td>Tarapoto</td><td>San Martin</td><td class="num-cell"><strong>152</strong></td><td class="num-cell">2</td><td class="num-cell">1</td><td class="num-cell">0.7%</td></tr>
+        <tr><td>HUB-2608-852</td><td>Huaraz El Pinar</td><td>Ancash</td><td class="num-cell"><strong>129</strong></td><td class="num-cell">3</td><td class="num-cell">6</td><td class="num-cell">4.7%</td></tr>
+        <tr><td>HUB-2608-471</td><td>Chiclayo</td><td>Lambayeque</td><td class="num-cell"><strong>120</strong></td><td class="num-cell">3</td><td class="num-cell">4</td><td class="num-cell">3.3%</td></tr>
+        <tr><td>HUB-2609-250</td><td>Callao</td><td>Callao</td><td class="num-cell"><strong>66</strong></td><td class="num-cell">3</td><td class="num-cell">1</td><td class="num-cell">1.5%</td></tr>
+        <tr><td>HUB-2608-376</td><td>Huaraz Palmira</td><td>Ancash</td><td class="num-cell">52</td><td class="num-cell">3</td><td class="num-cell">3</td><td class="num-cell">5.8%</td></tr>
+        <tr><td>HUB-2608-176</td><td>Chepen</td><td>La Libertad</td><td class="num-cell">52</td><td class="num-cell">2</td><td class="num-cell">2</td><td class="num-cell">3.8%</td></tr>
+        <tr><td>HUB-2608-880</td><td>Moyobamba</td><td>San Martin</td><td class="num-cell">40</td><td class="num-cell">2</td><td class="num-cell">0</td><td class="num-cell">0%</td></tr>
+        <tr><td>HUB-2609-643</td><td>Ate</td><td>Lima</td><td class="num-cell">36</td><td class="num-cell">2</td><td class="num-cell">0</td><td class="num-cell">0%</td></tr>
+        <tr><td>HUB-2608-446</td><td>Trujillo</td><td>La Libertad</td><td class="num-cell">24</td><td class="num-cell">2</td><td class="num-cell">0</td><td class="num-cell">0%</td></tr>
+        <tr><td>HUB-2608-538</td><td>Moyobamba</td><td>San Martin</td><td class="num-cell">6</td><td class="num-cell">2</td><td class="num-cell">0</td><td class="num-cell">0%</td></tr>
+        <tr><td>HUB-2609-728</td><td>Moyobamba</td><td>San Martin</td><td class="num-cell">5</td><td class="num-cell">1</td><td class="num-cell">0</td><td class="num-cell">0%</td></tr>
+        <tr class="highlight-row"><td colspan="3"><strong>TOTAL (17 activaciones)</strong></td><td class="num-cell"><strong>3,457</strong></td><td class="num-cell"><strong>43</strong></td><td class="num-cell"><strong>76</strong></td><td class="num-cell"><strong>2.2%</strong></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ========== FUNNEL ========== -->
+<section id="funnel" class="section">
+  <div class="section-title"><span class="num">4</span> Funnel de Conversion (Lead &rarr; Solicitud &rarr; Firma)</div>
+  <div class="section-desc">Cruce por DNI entre leads capturados en el hub (Postgres) y solicitudes en el sistema core (MySQL). Periodo: septiembre 2026.</div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Funnel Visual</h3>
+      <div class="funnel">
+        <div class="funnel-step">
+          <div class="funnel-bar" style="width:100%;background:var(--primary)">3,457</div>
+          <div><div class="funnel-label">Leads capturados</div><div class="funnel-detail">DNIs unicos registrados por promotoras</div></div>
+          <div class="funnel-pct">100%</div>
+        </div>
+        <div class="funnel-arrow">&darr;</div>
+        <div class="funnel-step">
+          <div class="funnel-bar" style="width:22.1%;background:var(--blue)">699</div>
+          <div><div class="funnel-label">Generaron solicitud</div><div class="funnel-detail">Llenaron formulario en la web</div></div>
+          <div class="funnel-pct">20.2%</div>
+        </div>
+        <div class="funnel-arrow">&darr;</div>
+        <div class="funnel-step">
+          <div class="funnel-bar" style="width:15.5%;background:var(--green)">534</div>
+          <div><div class="funnel-label">Aprobadas + en revision</div><div class="funnel-detail">273 aprobadas, 261 en revision</div></div>
+          <div class="funnel-pct">15.5%</div>
+        </div>
+        <div class="funnel-arrow">&darr;</div>
+        <div class="funnel-step">
+          <div class="funnel-bar" style="width:5.8%;background:var(--accent)">199</div>
+          <div><div class="funnel-label">Firmaron contrato</div><div class="funnel-detail">Contrato firmado por el estudiante</div></div>
+          <div class="funnel-pct">5.8%</div>
+        </div>
+        <div class="funnel-arrow">&darr;</div>
+        <div class="funnel-step">
+          <div class="funnel-bar" style="width:3%;min-width:50px;background:var(--red)">0</div>
+          <div><div class="funnel-label">Entregadas</div><div class="funnel-detail">Equipo entregado (en proceso)</div></div>
+          <div class="funnel-pct">0%</div>
+        </div>
+      </div>
+      <div class="alert alert-orange" style="margin-top:10px">
+        <strong>165 rechazadas</strong> (23.6% de las 699 personas con solicitud). Caida principal: del lead a la solicitud &mdash; el 79.8% de leads no genera solicitud.
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Detalle por Etapa</h3>
+      <table>
+        <thead><tr><th>Etapa</th><th class="num-cell">Personas</th><th class="num-cell">% de Leads</th><th class="num-cell">Nota</th></tr></thead>
+        <tbody>
+          <tr><td>Leads capturados (DNIs unicos)</td><td class="num-cell"><strong>3,457</strong></td><td class="num-cell">100%</td><td></td></tr>
+          <tr><td>Generaron solicitud</td><td class="num-cell"><strong>699</strong></td><td class="num-cell">20.2%</td><td></td></tr>
+          <tr><td>&nbsp;&nbsp;&rarr; Aprobadas</td><td class="num-cell">273</td><td class="num-cell">7.9%</td><td></td></tr>
+          <tr><td>&nbsp;&nbsp;&rarr; En revision</td><td class="num-cell">261</td><td class="num-cell">7.6%</td><td></td></tr>
+          <tr><td>&nbsp;&nbsp;&rarr; Rechazadas</td><td class="num-cell">165</td><td class="num-cell">4.8%</td><td></td></tr>
+          <tr class="highlight-row"><td><strong>Firmaron contrato</strong></td><td class="num-cell"><strong>199</strong></td><td class="num-cell"><strong>5.8%</strong></td><td></td></tr>
+          <tr><td>Equipo entregado</td><td class="num-cell">0</td><td class="num-cell">0%</td><td>En proceso</td></tr>
+          <tr><td style="color:var(--text-light)">Sin solicitud</td><td class="num-cell" style="color:var(--text-light)">2,758</td><td class="num-cell" style="color:var(--text-light)">79.8%</td><td style="color:var(--text-light)">No avanzaron a formulario web</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:20px">Atribucion (sobre 699 personas)</h3>
+      <table>
+        <thead><tr><th>Metrica</th><th class="num-cell">Personas</th><th class="num-cell">%</th></tr></thead>
+        <tbody>
+          <tr><td>Marcadas como activacion</td><td class="num-cell">660</td><td class="num-cell">94.4%</td></tr>
+          <tr><td>Con promotor atribuido</td><td class="num-cell">446</td><td class="num-cell">63.8%</td></tr>
+          <tr><td>Sin promotor</td><td class="num-cell">253</td><td class="num-cell">36.2%</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:20px">Por Source (sobre 699 personas)</h3>
+      <table>
+        <thead><tr><th>Source</th><th class="num-cell">Personas</th><th class="num-cell">%</th></tr></thead>
+        <tbody>
+          <tr><td>ucv</td><td class="num-cell">501</td><td class="num-cell">71.7%</td></tr>
+          <tr><td>ucv-express</td><td class="num-cell">137</td><td class="num-cell">19.6%</td></tr>
+          <tr><td>senati</td><td class="num-cell">28</td><td class="num-cell">4.0%</td></tr>
+          <tr><td>uss</td><td class="num-cell">14</td><td class="num-cell">2.0%</td></tr>
+          <tr><td>prestamo</td><td class="num-cell">11</td><td class="num-cell">1.6%</td></tr>
+          <tr><td>uss-express</td><td class="num-cell">5</td><td class="num-cell">0.7%</td></tr>
+          <tr><td>otros</td><td class="num-cell">3</td><td class="num-cell">0.4%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Top 14 Promotoras por Personas con Solicitud Atribuida</h3>
+    <table>
+      <thead><tr><th>#</th><th>Promotora</th><th class="num-cell">Personas</th><th class="num-cell">% de 446</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>Alexander Abel Chuquihuanga Ramos</td><td class="num-cell"><strong>51</strong></td><td class="num-cell">11.4%</td></tr>
+        <tr><td>2</td><td>Yulitza Coromoto Pinto Hernandez</td><td class="num-cell"><strong>49</strong></td><td class="num-cell">11.0%</td></tr>
+        <tr><td>3</td><td>Alejandra de los Milagros Facho Diaz</td><td class="num-cell"><strong>45</strong></td><td class="num-cell">10.1%</td></tr>
+        <tr><td>4</td><td>Yrene Vasquez Gomez</td><td class="num-cell"><strong>42</strong></td><td class="num-cell">9.4%</td></tr>
+        <tr><td>5</td><td>Raichel Geraldine Ysidro Tocto</td><td class="num-cell"><strong>25</strong></td><td class="num-cell">5.6%</td></tr>
+        <tr><td>6</td><td>Marisol Graciela Sayago Ramirez</td><td class="num-cell"><strong>18</strong></td><td class="num-cell">4.0%</td></tr>
+        <tr><td>7</td><td>Amira Jamila Alegre Ormeno</td><td class="num-cell"><strong>15</strong></td><td class="num-cell">3.4%</td></tr>
+        <tr><td>8</td><td>Melanie Denisse Aburto Dominguez</td><td class="num-cell"><strong>12</strong></td><td class="num-cell">2.7%</td></tr>
+        <tr><td>9</td><td>Josselin Antuane Mosquera Palacios</td><td class="num-cell"><strong>12</strong></td><td class="num-cell">2.7%</td></tr>
+        <tr><td>10</td><td>Evelyn Cristina Garcia Noa</td><td class="num-cell"><strong>12</strong></td><td class="num-cell">2.7%</td></tr>
+        <tr><td>11</td><td>Carolay Yessenia Pacaya Pinedo</td><td class="num-cell"><strong>11</strong></td><td class="num-cell">2.5%</td></tr>
+        <tr><td>12</td><td>Karolay Silva Perez</td><td class="num-cell"><strong>11</strong></td><td class="num-cell">2.5%</td></tr>
+        <tr><td>13</td><td>Sheshira Shiomara Garcia Noa</td><td class="num-cell"><strong>11</strong></td><td class="num-cell">2.5%</td></tr>
+        <tr><td>14</td><td>75184107</td><td class="num-cell"><strong>10</strong></td><td class="num-cell">2.2%</td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-orange" style="margin-top:10px">
+      <strong>253 personas (36.2%) sin promotor atribuido.</strong> El estudiante llego por otro canal despues de la captura del lead, o la atribucion por UTMs no funciono.
+    </div>
+  </div>
+</section>
+
+<!-- ========== FLYERS ========== -->
+<section id="flyers" class="section">
+  <div class="section-title"><span class="num">5</span> Metricas de Flyers</div>
+
+  <div class="kpi-grid">
+    <div class="kpi blue">
+      <div class="value">241,150</div>
+      <div class="label">Flyers Totales (inventario)</div>
+      <div class="detail">184 paquetes</div>
+    </div>
+    <div class="kpi accent">
+      <div class="value">106,000</div>
+      <div class="label">Entregados en Sep</div>
+      <div class="detail">58 paquetes, 53 promotoras</div>
+    </div>
+    <div class="kpi green">
+      <div class="value">2,459</div>
+      <div class="label">Escaneos Publicos</div>
+      <div class="detail">89 tokens unicos</div>
+    </div>
+    <div class="kpi">
+      <div class="value">52</div>
+      <div class="label">Promotoras Atribuidas</div>
+      <div class="detail">95.1% por asignacion vigente</div>
+    </div>
+    <div class="kpi orange">
+      <div class="value">0</div>
+      <div class="label">Custodias Registradas</div>
+      <div class="detail">Promotoras no escanean al recoger</div>
+    </div>
+    <div class="kpi green">
+      <div class="value">20.2%</div>
+      <div class="label">Lead &rarr; Solicitud</div>
+      <div class="detail">699 de 3,457 DNIs</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>Escaneos Publicos por Dia</h3>
+    <div class="chart-container tall"><canvas id="chartScansDia"></canvas></div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Escaneos por Hora del Dia</h3>
+      <div class="chart-container"><canvas id="chartScansHora"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Escaneos por Dia de Semana</h3>
+      <div class="chart-container"><canvas id="chartScansDow"></canvas></div>
+    </div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Inventario de Flyers por Tipo y Estado</h3>
+      <table>
+        <thead><tr><th>Tipo</th><th>Estado</th><th class="num-cell">Paquetes</th><th class="num-cell">Flyers</th></tr></thead>
+        <tbody>
+          <tr><td>BALDECASH</td><td><span class="badge badge-blue">asignado</span></td><td class="num-cell">28</td><td class="num-cell">22,650</td></tr>
+          <tr><td>BALDECASH</td><td>en_almacen</td><td class="num-cell">11</td><td class="num-cell">10,050</td></tr>
+          <tr><td>BALDECASH</td><td><span class="badge badge-green">en_distribucion</span></td><td class="num-cell">1</td><td class="num-cell">50</td></tr>
+          <tr><td>BALDECASH</td><td>impreso</td><td class="num-cell">36</td><td class="num-cell">31,900</td></tr>
+          <tr><td>UCV</td><td><span class="badge badge-blue">asignado</span></td><td class="num-cell">64</td><td class="num-cell">124,500</td></tr>
+          <tr><td>UCV</td><td>impreso</td><td class="num-cell">44</td><td class="num-cell">52,000</td></tr>
+          <tr class="highlight-row"><td colspan="2"><strong>TOTAL</strong></td><td class="num-cell"><strong>184</strong></td><td class="num-cell"><strong>241,150</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <h3>Tiradas Creadas en Septiembre</h3>
+      <table>
+        <thead><tr><th>Nombre</th><th>Tipo</th><th class="num-cell">Paquetes</th><th class="num-cell">Flyers/paq</th><th class="num-cell">Total</th></tr></thead>
+        <tbody>
+          <tr><td>UCV Los Olivos - NL</td><td>UCV</td><td class="num-cell">6</td><td class="num-cell">4,000</td><td class="num-cell"><strong>24,000</strong></td></tr>
+          <tr><td>UCV Piura</td><td>UCV</td><td class="num-cell">5</td><td class="num-cell">4,000</td><td class="num-cell"><strong>20,000</strong></td></tr>
+          <tr><td>UCV SJL</td><td>UCV</td><td class="num-cell">4</td><td class="num-cell">3,000</td><td class="num-cell"><strong>12,000</strong></td></tr>
+          <tr><td>SENATI</td><td>BALDECASH</td><td class="num-cell">12</td><td class="num-cell">1,000</td><td class="num-cell"><strong>12,000</strong></td></tr>
+          <tr><td>USS Chiclayo</td><td>BALDECASH</td><td class="num-cell">5</td><td class="num-cell">2,000</td><td class="num-cell"><strong>10,000</strong></td></tr>
+          <tr><td>UCV Chimbote</td><td>UCV</td><td class="num-cell">4</td><td class="num-cell">2,000</td><td class="num-cell"><strong>8,000</strong></td></tr>
+          <tr><td>UCV LO Extra</td><td>UCV</td><td class="num-cell">2</td><td class="num-cell">4,000</td><td class="num-cell"><strong>8,000</strong></td></tr>
+          <tr><td>UCV Chiclayo</td><td>UCV</td><td class="num-cell">3</td><td class="num-cell">2,000</td><td class="num-cell"><strong>6,000</strong></td></tr>
+          <tr class="highlight-row"><td colspan="4"><strong>TOTAL SEPTIEMBRE</strong></td><td class="num-cell"><strong>100,000</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== FLYER DETALLE ========== -->
+<section id="flyer-detalle" class="section">
+  <div class="section-title"><span class="num">6</span> Flyer &mdash; Detalle de Performance</div>
+
+  <div class="card-grid">
+    <div class="card">
+      <h3>Top 15 Flyers Virales (&gt;3 escaneos)</h3>
+      <table>
+        <thead><tr><th>Token</th><th>Lote</th><th class="num-cell">Escaneos</th><th class="num-cell">Dias activo</th></tr></thead>
+        <tbody>
+          <tr><td>F92ZBTBE</td><td>LOTE-00075</td><td class="num-cell"><strong>110</strong></td><td class="num-cell">11</td></tr>
+          <tr><td>SSNY8HVD</td><td>LOTE-00072</td><td class="num-cell"><strong>92</strong></td><td class="num-cell">11</td></tr>
+          <tr><td>YECFV99D</td><td>LOTE-00149</td><td class="num-cell"><strong>90</strong></td><td class="num-cell">12</td></tr>
+          <tr><td>QV3K8DQN</td><td>LOTE-00095</td><td class="num-cell"><strong>85</strong></td><td class="num-cell">7</td></tr>
+          <tr><td>HEXZVTHS</td><td>LOTE-00062</td><td class="num-cell"><strong>80</strong></td><td class="num-cell">12</td></tr>
+          <tr><td>8AGHWZV2</td><td>LOTE-00089</td><td class="num-cell"><strong>79</strong></td><td class="num-cell">15</td></tr>
+          <tr><td>YD86CDRC</td><td>LOTE-00061</td><td class="num-cell"><strong>76</strong></td><td class="num-cell">12</td></tr>
+          <tr><td>H5MVVZHT</td><td>LOTE-00081</td><td class="num-cell"><strong>72</strong></td><td class="num-cell">7</td></tr>
+          <tr><td>K655GDMF</td><td>LOTE-00060</td><td class="num-cell"><strong>64</strong></td><td class="num-cell">10</td></tr>
+          <tr><td>Z8GRJMP7</td><td>LOTE-00091</td><td class="num-cell"><strong>64</strong></td><td class="num-cell">13</td></tr>
+          <tr><td>3V7EQSVX</td><td>LOTE-00098</td><td class="num-cell"><strong>61</strong></td><td class="num-cell">14</td></tr>
+          <tr><td>SQNQDJC6</td><td>LOTE-00155</td><td class="num-cell"><strong>57</strong></td><td class="num-cell">6</td></tr>
+          <tr><td>YRF32M79</td><td>LOTE-00071</td><td class="num-cell"><strong>57</strong></td><td class="num-cell">6</td></tr>
+          <tr><td>PYKHVQ3X</td><td>LOTE-00085</td><td class="num-cell"><strong>55</strong></td><td class="num-cell">3</td></tr>
+          <tr><td>4YWGNDTT</td><td>LOTE-00093</td><td class="num-cell"><strong>52</strong></td><td class="num-cell">10</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-green" style="margin-top:14px">
+        Los top 20 flyers acumulan <strong>1,358 escaneos (55.4%)</strong> del total. Flyers con >10 dias de actividad sostenida.
+      </div>
+    </div>
+    <div class="card">
+      <h3>Top 15 Promotoras por Escaneos de Flyer</h3>
+      <table>
+        <thead><tr><th>#</th><th>Nombre</th><th class="num-cell">Escaneos</th><th class="num-cell">Tokens</th><th class="num-cell">Dias</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>Sandra Romero Cedamanos</td><td class="num-cell"><strong>158</strong></td><td class="num-cell">4</td><td class="num-cell">15</td></tr>
+          <tr><td>2</td><td>Raichel Ysidro Tocto</td><td class="num-cell"><strong>157</strong></td><td class="num-cell">3</td><td class="num-cell">15</td></tr>
+          <tr><td>3</td><td>Carolay Pacaya Pinedo</td><td class="num-cell"><strong>137</strong></td><td class="num-cell">2</td><td class="num-cell">13</td></tr>
+          <tr><td>4</td><td>Pamela Chavez Montalvan</td><td class="num-cell"><strong>122</strong></td><td class="num-cell">2</td><td class="num-cell">16</td></tr>
+          <tr><td>5</td><td>Ruth Lucano Collantes</td><td class="num-cell"><strong>112</strong></td><td class="num-cell">2</td><td class="num-cell">13</td></tr>
+          <tr><td>6</td><td>Patrick Vargas Munoz</td><td class="num-cell"><strong>110</strong></td><td class="num-cell">1</td><td class="num-cell">11</td></tr>
+          <tr><td>7</td><td>Brenda Olivera Hurtado</td><td class="num-cell"><strong>98</strong></td><td class="num-cell">2</td><td class="num-cell">13</td></tr>
+          <tr><td>8</td><td>Yrene Vasquez Gomez</td><td class="num-cell"><strong>87</strong></td><td class="num-cell">3</td><td class="num-cell">14</td></tr>
+          <tr><td>9</td><td>Yulitza Pinto Hernandez</td><td class="num-cell"><strong>81</strong></td><td class="num-cell">2</td><td class="num-cell">15</td></tr>
+          <tr><td>10</td><td>Diego Noel Rojas</td><td class="num-cell"><strong>79</strong></td><td class="num-cell">2</td><td class="num-cell">10</td></tr>
+          <tr><td>11</td><td>Karolay Silva Perez</td><td class="num-cell"><strong>76</strong></td><td class="num-cell">2</td><td class="num-cell">12</td></tr>
+          <tr><td>12</td><td>Jade Lopez Torres</td><td class="num-cell"><strong>65</strong></td><td class="num-cell">2</td><td class="num-cell">13</td></tr>
+          <tr><td>13</td><td>Alexander Chuquihuanga</td><td class="num-cell"><strong>61</strong></td><td class="num-cell">1</td><td class="num-cell">14</td></tr>
+          <tr><td>14</td><td>Marcela Salinas Trebejo</td><td class="num-cell"><strong>60</strong></td><td class="num-cell">2</td><td class="num-cell">11</td></tr>
+          <tr><td>15</td><td>Alejandra Facho Diaz</td><td class="num-cell"><strong>60</strong></td><td class="num-cell">2</td><td class="num-cell">14</td></tr>
+        </tbody>
+      </table>
+
+      <h3 style="margin-top:20px">Metodo de Resolucion</h3>
+      <table>
+        <thead><tr><th>Metodo</th><th class="num-cell">Escaneos</th><th class="num-cell">%</th></tr></thead>
+        <tbody>
+          <tr><td>Asignacion vigente</td><td class="num-cell">2,333</td><td class="num-cell">95.1%</td></tr>
+          <tr><td>Fallback casa</td><td class="num-cell">120</td><td class="num-cell">4.9%</td></tr>
+          <tr><td>Invalido</td><td class="num-cell">1</td><td class="num-cell">0.0%</td></tr>
+          <tr><td>Congelada</td><td class="num-cell">0</td><td class="num-cell">0.0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ========== HALLAZGOS ========== -->
+<section id="hallazgos" class="section">
+  <div class="section-title"><span class="num">7</span> Hallazgos y Observaciones</div>
+
+  <div class="card">
+    <div class="alert alert-red">
+      <div><strong>1. Seguimiento manual de leads muy bajo.</strong> Solo 2.2% de leads (76 de 3,457) tiene contacto manual de promotoras. Con la automatizacion (625 adicionales) sube a 20.3%. El 79.7% de leads no tiene ninguna forma de seguimiento.</div>
+    </div>
+    <div class="alert alert-red">
+      <div><strong>2. Adopcion del app muy baja.</strong> Solo 70 de 276 promotoras (25.4%) inicio sesion. Solo 51 (18.5%) marco asistencia. Solo 42 (15.2%) registro leads. El 74.6% de la base no tiene actividad.</div>
+    </div>
+    <div class="alert alert-orange">
+      <div><strong>3. Concentracion extrema.</strong> Las top 11 promotoras generan el 49% de los leads. Las top 20 por flyer acumulan el 75%+ de escaneos. El negocio depende de un grupo reducido.</div>
+    </div>
+    <div class="alert alert-orange">
+      <div><strong>4. Tardanza generalizada.</strong> 47.9% de check-ins con tardanza, promedio 37.5 min. Extremos de >500 min sugieren check-ins retroactivos o fuera de horario.</div>
+    </div>
+    <div class="alert alert-orange">
+      <div><strong>5. Conversion lead&rarr;solicitud del 20.2%.</strong> De 3,457 leads capturados, 699 personas generaron solicitud. 199 firmaron contrato (5.8%). El cuello de botella principal es del lead a la solicitud: el 79.8% no avanza. 253 personas (36.2%) sin promotor atribuido en la solicitud.</div>
+    </div>
+    <div class="alert alert-orange">
+      <div><strong>6. Custodia no se usa.</strong> 0 custodias registradas en septiembre. Las promotoras no escanean al recoger paquetes fisicos, lo que impide rastrear la cadena de distribucion.</div>
+    </div>
+    <div class="alert alert-orange">
+      <div><strong>7. Logins anomalos.</strong> Melanie Aburto tiene 897 logins en 16 dias (~56/dia). Posible problema de persistencia de sesion forzando re-login constante.</div>
+    </div>
+    <div class="alert alert-green">
+      <div><strong>8. Flyers virales con vida larga.</strong> El top flyer (LOTE-00075) tiene 110 escaneos en 11 dias. Varios flyers mantienen actividad 12-15 dias. La inversion en impresion tiene retorno sostenido.</div>
+    </div>
+  </div>
+</section>
+
+</div><!-- /container -->
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 id="modalTitle">Detalle</h3>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer" id="modalFooter"></div>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>BaldeCash</strong> &mdash; Reporte generado automaticamente desde Aurora PostgreSQL (acthub_*) &mdash; 16 Sep 2026
+</div>
+
+<script>
+const C = (id) => document.getElementById(id).getContext('2d');
+const COLORS = { primary: '#1a2744', accent: '#e8a838', blue: '#3498db', green: '#27ae60', red: '#e74c3c', orange: '#f39c12', purple: '#9b59b6', teal: '#1abc9c' };
+
+// Login detail data per day
+const LOGIN_DETAIL = [
+  {fecha:"Sep 01",promotoras:[{n:"Evelyn Cristina Garcia Noa",l:25},{n:"Marcela Karla Salinas Trebejo",l:24},{n:"Sheshira Shiomara Garcia Noa",l:23},{n:"Yrene Vasquez Gomez",l:21},{n:"Diana Ivette Alvarado Mendez",l:9},{n:"Melanie Denisse Aburto Dominguez",l:6},{n:"Patrick Jusephy Vargas Munoz",l:5},{n:"Almudena Victoria Huaman Alegre",l:5},{n:"Karolay Silva Perez",l:5},{n:"Raichel Geraldine Ysidro Tocto",l:4},{n:"Flor de Maria Hernandez Sanchez",l:3},{n:"Kassandra Briggite Santa Cruz Ventura",l:3},{n:"Pamela Chavez Montalvan",l:3},{n:"Cinthia Viviana Olivera Gordillo",l:2},{n:"Sharon Nicole Angulo Arce",l:2},{n:"Juan Jose Uribe Garcia",l:1},{n:"Josselin Antuane Mosquera Palacios",l:1},{n:"Celeste Ramos Villanueva",l:1},{n:"Mariel Ivon Gutierrez Medina",l:1},{n:"Kristel Andreina Barrueta Gonzales",l:1},{n:"Jade Lopez Torres",l:1},{n:"Marisol Graciela Sayago Ramirez",l:1},{n:"Ruth Marleny Lucano Collantes",l:1},{n:"Amira Jamila Alegre Ormeno",l:1},{n:"Diego Alonso Noel Rojas",l:1},{n:"Azucena Astrid Saravia Ruiz",l:1},{n:"Yeray Iory Schenaider Maguina Cespedes",l:1}]},
+  {fecha:"Sep 02",promotoras:[{n:"Marcela Karla Salinas Trebejo",l:66},{n:"Yrene Vasquez Gomez",l:38},{n:"Evelyn Cristina Garcia Noa",l:25},{n:"Sheshira Shiomara Garcia Noa",l:22},{n:"Melanie Denisse Aburto Dominguez",l:19},{n:"Karolay Silva Perez",l:13},{n:"Mariel Ivon Gutierrez Medina",l:9},{n:"Almudena Victoria Huaman Alegre",l:8},{n:"Raichel Geraldine Ysidro Tocto",l:8},{n:"Patrick Jusephy Vargas Munoz",l:7},{n:"Marco Del Rio",l:5},{n:"Jade Lopez Torres",l:4},{n:"Kristel Andreina Barrueta Gonzales",l:4},{n:"Sharon Nicole Angulo Arce",l:3},{n:"Monica Obando",l:3},{n:"Carolay Yessenia Pacaya Pinedo",l:2},{n:"Marisol Graciela Sayago Ramirez",l:2},{n:"Alexander Cruces",l:2},{n:"Valeria Palomino",l:1},{n:"Miluska Milagros Torres Lopez",l:1},{n:"Zadith Caceres Gongora",l:1},{n:"Jorge Hinojosa",l:1},{n:"Azucena Astrid Saravia Ruiz",l:1},{n:"Aned Sofia Ramirez Maravi",l:1},{n:"Diana Ivette Alvarado Mendez",l:1},{n:"Grace Prisyla Valdez Benites",l:1}]},
+  {fecha:"Sep 03",promotoras:[{n:"Marcela Karla Salinas Trebejo",l:66},{n:"Melanie Denisse Aburto Dominguez",l:61},{n:"Yrene Vasquez Gomez",l:34},{n:"Sheshira Shiomara Garcia Noa",l:24},{n:"Karolay Silva Perez",l:17},{n:"Mariel Ivon Gutierrez Medina",l:10},{n:"Evelyn Cristina Garcia Noa",l:10},{n:"Diana Ivette Alvarado Mendez",l:10},{n:"Monica Obando",l:8},{n:"Cony Banelly Lopez Mendoza",l:6},{n:"Anita Lucero Arevalo Diaz",l:6},{n:"Almudena Victoria Huaman Alegre",l:6},{n:"Grace Prisyla Valdez Benites",l:5},{n:"Jade Lopez Torres",l:5},{n:"Valeria Palomino",l:5},{n:"Zadith Caceres Gongora",l:4},{n:"Raichel Geraldine Ysidro Tocto",l:4},{n:"Marco Del Rio",l:4},{n:"Alexander Cruces",l:3},{n:"Jerry Rodrigo Simarra Vasquez",l:2},{n:"Adriel Zoran Fernandez Flores",l:2},{n:"Hirohito Alexander Pizango Marquez",l:2},{n:"Carolay Yessenia Pacaya Pinedo",l:2},{n:"Amira Jamila Alegre Ormeno",l:2},{n:"Azucena Astrid Saravia Ruiz",l:2},{n:"Eliane Antonella Varas Rodriguez",l:1},{n:"Celeste Ramos Villanueva",l:1},{n:"David Nino",l:1},{n:"Keyla Paola Alarcon Taipe",l:1},{n:"Rocio Vanessa Alarcon Taipe",l:1},{n:"Brayan Pool Ruiz Arevalo",l:1},{n:"Sheyla Alipia Arguedas Lozano",l:1},{n:"Gianella Oriana Arguedas Lozano",l:1},{n:"Aned Sofia Ramirez Maravi",l:1},{n:"Sharon Nicole Angulo Arce",l:1},{n:"Cinthia Viviana Olivera Gordillo",l:1}]},
+  {fecha:"Sep 04",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:85},{n:"Yrene Vasquez Gomez",l:34},{n:"Sheshira Shiomara Garcia Noa",l:31},{n:"Marcela Karla Salinas Trebejo",l:25},{n:"Evelyn Cristina Garcia Noa",l:16},{n:"Karolay Silva Perez",l:11},{n:"Diana Ivette Alvarado Mendez",l:9},{n:"Mariel Ivon Gutierrez Medina",l:8},{n:"Anita Lucero Arevalo Diaz",l:6},{n:"Jorge Hinojosa",l:5},{n:"Almudena Victoria Huaman Alegre",l:5},{n:"Kristel Andreina Barrueta Gonzales",l:4},{n:"Jade Lopez Torres",l:4},{n:"Alexander Cruces",l:4},{n:"Monica Obando",l:3},{n:"Sheyla Alipia Arguedas Lozano",l:3},{n:"Vivian Nathaly Perez Sullca",l:3},{n:"Zadith Caceres Gongora",l:3},{n:"Raichel Geraldine Ysidro Tocto",l:2},{n:"Arom Calet Bellido Vasquez",l:2},{n:"Valeria Palomino",l:2},{n:"Aned Sofia Ramirez Maravi",l:2},{n:"Italo Jose Bellido Vasquez",l:2},{n:"Amira Jamila Alegre Ormeno",l:2},{n:"Sayuri Miluska Sangama Mendoza",l:1},{n:"Hernan Armando Huaman Rosas",l:1},{n:"Fiorela Ruby Quiliche Guevara",l:1},{n:"Cinthia Viviana Olivera Gordillo",l:1},{n:"Gianella Oriana Arguedas Lozano",l:1}]},
+  {fecha:"Sep 05",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:83},{n:"Karolay Silva Perez",l:47},{n:"Marcela Karla Salinas Trebejo",l:28},{n:"Sheshira Shiomara Garcia Noa",l:18},{n:"Yrene Vasquez Gomez",l:12},{n:"Mariel Ivon Gutierrez Medina",l:9},{n:"Evelyn Cristina Garcia Noa",l:7},{n:"Almudena Victoria Huaman Alegre",l:6},{n:"Cinthia Viviana Olivera Gordillo",l:6},{n:"Raichel Geraldine Ysidro Tocto",l:5},{n:"Sheyla Alipia Arguedas Lozano",l:5},{n:"Azucena Astrid Saravia Ruiz",l:5},{n:"Gisela Ana Rodas Romero",l:3},{n:"Diana Ivette Alvarado Mendez",l:3},{n:"Grace Prisyla Valdez Benites",l:3},{n:"Italo Jose Bellido Vasquez",l:2},{n:"75184107",l:2},{n:"Celeste Ramos Villanueva",l:2},{n:"Alexander Cruces",l:2},{n:"Monica Obando",l:1},{n:"Lisbet Hermelinda Chambergo Bonifacio",l:1},{n:"Valeria Palomino",l:1},{n:"Kristel Andreina Barrueta Gonzales",l:1},{n:"Anita Lucero Arevalo Diaz",l:1},{n:"Gianella Oriana Arguedas Lozano",l:1}]},
+  {fecha:"Sep 06",promotoras:[{n:"Marcela Karla Salinas Trebejo",l:19},{n:"Karolay Silva Perez",l:17},{n:"Yrene Vasquez Gomez",l:12},{n:"Melanie Denisse Aburto Dominguez",l:11},{n:"Mariel Ivon Gutierrez Medina",l:6},{n:"Sheshira Shiomara Garcia Noa",l:5},{n:"Almudena Victoria Huaman Alegre",l:4},{n:"Raichel Geraldine Ysidro Tocto",l:3},{n:"Carolay Yessenia Pacaya Pinedo",l:1},{n:"Marisol Graciela Sayago Ramirez",l:1},{n:"Richard Mark Lopez Pizarro",l:1},{n:"Lisbet Hermelinda Chambergo Bonifacio",l:1},{n:"Diana Ivette Alvarado Mendez",l:1},{n:"Sheyla Alipia Arguedas Lozano",l:1},{n:"Evelyn Cristina Garcia Noa",l:1}]},
+  {fecha:"Sep 07",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:44},{n:"Almudena Victoria Huaman Alegre",l:15},{n:"Sheshira Shiomara Garcia Noa",l:11},{n:"Evelyn Cristina Garcia Noa",l:10},{n:"Karolay Silva Perez",l:9},{n:"Mariel Ivon Gutierrez Medina",l:9},{n:"Marcela Karla Salinas Trebejo",l:8},{n:"Yrene Vasquez Gomez",l:4},{n:"Gisela Ana Rodas Romero",l:4},{n:"Azucena Astrid Saravia Ruiz",l:4},{n:"Monica Obando",l:2},{n:"Raichel Geraldine Ysidro Tocto",l:2},{n:"Cinthia Viviana Olivera Gordillo",l:1},{n:"75184107",l:1},{n:"Marco Del Rio",l:1},{n:"Alexander Cruces",l:1},{n:"Diana Ivette Alvarado Mendez",l:1},{n:"Aned Sofia Ramirez Maravi",l:1},{n:"Lourdes Tatiana Prado Gonzalez",l:1},{n:"Miguel Zavala",l:1},{n:"Anita Lucero Arevalo Diaz",l:1},{n:"Lisbet Hermelinda Chambergo Bonifacio",l:1},{n:"Jorge Hinojosa",l:1},{n:"Fiorella Naomy Collantes Delgado",l:1}]},
+  {fecha:"Sep 08",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:105},{n:"Almudena Victoria Huaman Alegre",l:26},{n:"Sheshira Shiomara Garcia Noa",l:21},{n:"Karolay Silva Perez",l:15},{n:"Marcela Karla Salinas Trebejo",l:12},{n:"Mariel Ivon Gutierrez Medina",l:11},{n:"Evelyn Cristina Garcia Noa",l:9},{n:"Alexander Cruces",l:8},{n:"Yrene Vasquez Gomez",l:4},{n:"Miguel Zavala",l:3},{n:"Rocio Vanessa Alarcon Taipe",l:2},{n:"Raichel Geraldine Ysidro Tocto",l:2},{n:"Cinthia Viviana Olivera Gordillo",l:1},{n:"Genesis Priscila Fernandez Sanchez",l:1},{n:"Marco Del Rio",l:1},{n:"Jhon Kennedy Bustamante Rinza",l:1},{n:"Jorge Hinojosa",l:1},{n:"Aned Sofia Ramirez Maravi",l:1},{n:"Valeria Palomino",l:1},{n:"Diana Ivette Alvarado Mendez",l:1},{n:"Dona Estefany Galvez Meca",l:1}]},
+  {fecha:"Sep 09",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:73},{n:"Sheshira Shiomara Garcia Noa",l:27},{n:"Almudena Victoria Huaman Alegre",l:19},{n:"Marcela Karla Salinas Trebejo",l:17},{n:"Karolay Silva Perez",l:16},{n:"Evelyn Cristina Garcia Noa",l:9},{n:"Mariel Ivon Gutierrez Medina",l:7},{n:"Valeria Palomino",l:5},{n:"Anita Lucero Arevalo Diaz",l:3},{n:"Monica Obando",l:3},{n:"Yrene Vasquez Gomez",l:2},{n:"Cinthia Viviana Olivera Gordillo",l:2},{n:"Diego Pina Saboya",l:2},{n:"Sheyla Alipia Arguedas Lozano",l:2},{n:"Diana Ivette Alvarado Mendez",l:1},{n:"Jorge Hinojosa",l:1},{n:"Marco Del Rio",l:1},{n:"Raichel Geraldine Ysidro Tocto",l:1}]},
+  {fecha:"Sep 10",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:49},{n:"Almudena Victoria Huaman Alegre",l:21},{n:"Karolay Silva Perez",l:14},{n:"Sheshira Shiomara Garcia Noa",l:13},{n:"Marcela Karla Salinas Trebejo",l:13},{n:"Yrene Vasquez Gomez",l:10},{n:"Evelyn Cristina Garcia Noa",l:6},{n:"Valeria Palomino",l:4},{n:"Anita Lucero Arevalo Diaz",l:4},{n:"Alexander Cruces",l:4},{n:"Mariel Ivon Gutierrez Medina",l:3},{n:"Diego Pina Saboya",l:2},{n:"Diana Ivette Alvarado Mendez",l:2},{n:"Monica Obando",l:1},{n:"Aned Sofia Ramirez Maravi",l:1},{n:"Raichel Geraldine Ysidro Tocto",l:1}]},
+  {fecha:"Sep 11",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:79},{n:"Sheshira Shiomara Garcia Noa",l:26},{n:"Almudena Victoria Huaman Alegre",l:19},{n:"Yrene Vasquez Gomez",l:12},{n:"Karolay Silva Perez",l:12},{n:"Anita Lucero Arevalo Diaz",l:9},{n:"Evelyn Cristina Garcia Noa",l:8},{n:"Marcela Karla Salinas Trebejo",l:8},{n:"Monica Obando",l:4},{n:"Carolay Yessenia Pacaya Pinedo",l:3},{n:"Cinthia Viviana Olivera Gordillo",l:3},{n:"Mariel Ivon Gutierrez Medina",l:2},{n:"Raichel Geraldine Ysidro Tocto",l:2},{n:"Aned Sofia Ramirez Maravi",l:1},{n:"Marco Del Rio",l:1},{n:"Saori Ailyn Saravia Vargas",l:1},{n:"Jhon Kennedy Bustamante Rinza",l:1}]},
+  {fecha:"Sep 12",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:44},{n:"Yrene Vasquez Gomez",l:38},{n:"Sheshira Shiomara Garcia Noa",l:15},{n:"Evelyn Cristina Garcia Noa",l:14},{n:"Almudena Victoria Huaman Alegre",l:6},{n:"Karolay Silva Perez",l:6},{n:"Marcela Karla Salinas Trebejo",l:5},{n:"Anita Lucero Arevalo Diaz",l:4},{n:"Monica Obando",l:3},{n:"Raichel Geraldine Ysidro Tocto",l:2},{n:"Marco Del Rio",l:2},{n:"Aned Sofia Ramirez Maravi",l:2},{n:"Marisol Graciela Sayago Ramirez",l:1},{n:"Valeria Palomino",l:1},{n:"Luis Perez",l:1},{n:"Mariel Ivon Gutierrez Medina",l:1},{n:"Genesis Priscila Fernandez Sanchez",l:1},{n:"Heiddy Hilary Rutti Flores",l:1}]},
+  {fecha:"Sep 13",promotoras:[{n:"Yrene Vasquez Gomez",l:20},{n:"Evelyn Cristina Garcia Noa",l:16},{n:"Melanie Denisse Aburto Dominguez",l:11},{n:"Sheshira Shiomara Garcia Noa",l:5},{n:"Marcela Karla Salinas Trebejo",l:5},{n:"Karolay Silva Perez",l:4},{n:"Anita Lucero Arevalo Diaz",l:2},{n:"Alexander Cruces",l:2},{n:"Fiorella Ines Cespedes Alvarez",l:1},{n:"Marisol Graciela Sayago Ramirez",l:1},{n:"Mariel Ivon Gutierrez Medina",l:1}]},
+  {fecha:"Sep 14",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:49},{n:"Yrene Vasquez Gomez",l:9},{n:"Karolay Silva Perez",l:8},{n:"Sheshira Shiomara Garcia Noa",l:7},{n:"Mariel Ivon Gutierrez Medina",l:5},{n:"Evelyn Cristina Garcia Noa",l:5},{n:"Marcela Karla Salinas Trebejo",l:4},{n:"Alexander Cruces",l:4},{n:"Marisol Graciela Sayago Ramirez",l:3},{n:"Valeria Palomino",l:2},{n:"Eliane Antonella Varas Rodriguez",l:1},{n:"Monica Obando",l:1},{n:"Jorge Hinojosa",l:1},{n:"Sandra Gabriela Romero Cedamanos",l:1}]},
+  {fecha:"Sep 15",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:69},{n:"Sheshira Shiomara Garcia Noa",l:19},{n:"Marcela Karla Salinas Trebejo",l:17},{n:"Evelyn Cristina Garcia Noa",l:13},{n:"Yrene Vasquez Gomez",l:12},{n:"Karolay Silva Perez",l:10},{n:"Mariel Ivon Gutierrez Medina",l:6},{n:"Alexander Cruces",l:6},{n:"Anita Lucero Arevalo Diaz",l:3},{n:"Genesis Priscila Fernandez Sanchez",l:2},{n:"Sandra Gabriela Romero Cedamanos",l:2},{n:"Marisol Graciela Sayago Ramirez",l:2},{n:"Sheyla Alipia Arguedas Lozano",l:2},{n:"Jhon Kennedy Bustamante Rinza",l:1},{n:"Valeria Palomino",l:1},{n:"Aned Sofia Ramirez Maravi",l:1}]},
+  {fecha:"Sep 16",promotoras:[{n:"Melanie Denisse Aburto Dominguez",l:87},{n:"Sheshira Shiomara Garcia Noa",l:20},{n:"Marcela Karla Salinas Trebejo",l:15},{n:"Evelyn Cristina Garcia Noa",l:11},{n:"Alexander Cruces",l:11},{n:"Yrene Vasquez Gomez",l:9},{n:"Mariel Ivon Gutierrez Medina",l:7},{n:"Valeria Palomino",l:7},{n:"Anita Lucero Arevalo Diaz",l:7},{n:"Marco Del Rio",l:6},{n:"Genesis Priscila Fernandez Sanchez",l:4},{n:"Marisol Graciela Sayago Ramirez",l:3},{n:"Karolay Silva Perez",l:2},{n:"Diego Pina Saboya",l:2},{n:"Diego Alonso Noel Rojas",l:2},{n:"Sandra Gabriela Romero Cedamanos",l:2},{n:"Diana Ivette Alvarado Mendez",l:1},{n:"Kristel Andreina Barrueta Gonzales",l:1},{n:"Almudena Victoria Huaman Alegre",l:1},{n:"Gisela Ana Rodas Romero",l:1},{n:"Carolay Yessenia Pacaya Pinedo",l:1},{n:"Sheyla Alipia Arguedas Lozano",l:1},{n:"Monica Obando",l:1}]}
+];
+
+// Promotoras por rango de productividad
+const RANGO_DETAIL = {
+  "200+":[{n:"Yrene Vasquez Gomez",l:294,c:18,a:1}],
+  "100-199":[{n:"Melanie Denisse Aburto Dominguez",l:198,c:14,a:2},{n:"Marisol Graciela Sayago Ramirez",l:196,c:4,a:1},{n:"Raichel Geraldine Ysidro Tocto",l:185,c:1,a:1},{n:"Cinthia Viviana Olivera Gordillo",l:183,c:5,a:2},{n:"Yulitza Coromoto Pinto Hernandez",l:139,c:0,a:1},{n:"Josselin Antuane Mosquera Palacios",l:135,c:0,a:1},{n:"Miluska Milagros Torres Lopez",l:131,c:2,a:2},{n:"Evelyn Cristina Garcia Noa",l:124,c:0,a:2},{n:"Brayan Pool Ruiz Arevalo",l:108,c:0,a:1},{n:"Alejandra de los Milagros Facho Diaz",l:104,c:1,a:1},{n:"Alexander Abel Chuquihuanga Ramos",l:102,c:0,a:1},{n:"Sheshira Shiomara Garcia Noa",l:100,c:0,a:2}],
+  "50-99":[{n:"Sandra Gabriela Romero Cedamanos",l:95,c:0,a:4},{n:"Celeste Ramos Villanueva",l:92,c:0,a:1},{n:"Carolay Yessenia Pacaya Pinedo",l:84,c:0,a:1},{n:"Diego Alonso Noel Rojas",l:73,c:7,a:3},{n:"Almudena Victoria Huaman Alegre",l:72,c:4,a:1},{n:"Marcela Karla Salinas Trebejo",l:71,c:0,a:1},{n:"Mariel Ivon Gutierrez Medina",l:70,c:0,a:1},{n:"Genesis Priscila Fernandez Sanchez",l:69,c:1,a:1},{n:"Jade Lopez Torres",l:68,c:1,a:1},{n:"Amira Jamila Alegre Ormeno",l:64,c:1,a:1},{n:"Sharon Nicole Angulo Arce",l:62,c:1,a:2},{n:"Pamela Chavez Montalvan",l:59,c:4,a:2},{n:"Tatiana Estefany Alberto Toledo",l:55,c:0,a:1},{n:"Lucia Celeste Ortiz Carraco",l:55,c:0,a:1},{n:"Yeray Iory Schenaider Maguina Cespedes",l:55,c:2,a:2}],
+  "20-49":[{n:"Ruth Marleny Lucano Collantes",l:49,c:0,a:1},{n:"75184107",l:49,c:4,a:1},{n:"Karolay Silva Perez",l:44,c:2,a:1},{n:"Jhon Kennedy Bustamante Rinza",l:43,c:0,a:1},{n:"Flor de Maria Hernandez Sanchez",l:38,c:0,a:1},{n:"Hernan Armando Huaman Rosas",l:35,c:1,a:1},{n:"Aned Sofia Ramirez Maravi",l:32,c:1,a:1},{n:"Brenda Yojana Olivera Hurtado",l:28,c:0,a:1},{n:"Anita Lucero Arevalo Diaz",l:27,c:0,a:3}],
+  "10-19":[{n:"Nelson Nalvarte Quiroga",l:15,c:0,a:1},{n:"Kassandra Briggite Santa Cruz Ventura",l:14,c:2,a:1},{n:"Stefani Marcelo Mendez",l:12,c:0,a:1}],
+  "1-9":[{n:"Patrick Jusephy Vargas Munoz",l:8,c:0,a:1},{n:"Jerry Rodrigo Simarra Vasquez",l:4,c:0,a:1},{n:"Tatiana Brisa Basilio Paredes",l:3,c:0,a:1}]
+};
+
+function showRangoDetail(rango) {
+  const proms = RANGO_DETAIL[rango];
+  if (!proms) return;
+  const totalLeads = proms.reduce((s,p) => s + p.l, 0);
+  const title = 'Rango ' + rango + ' — ' + proms.length + ' promotoras, ' + totalLeads + ' leads';
+  let html = '<table><thead><tr><th style="width:36px">#</th><th>Nombre</th><th class="num-cell">Leads</th><th class="num-cell">% del rango</th><th class="num-cell">Contactados</th><th class="num-cell">% Contacto</th><th class="num-cell">Activac.</th></tr></thead><tbody>';
+  proms.forEach((p, i) => {
+    const pctRango = (100 * p.l / totalLeads).toFixed(1);
+    const pctContacto = p.l > 0 ? (100 * p.c / p.l).toFixed(1) : '0.0';
+    html += '<tr><td>' + (i+1) + '</td><td>' + p.n + '</td><td class="num-cell"><strong>' + p.l + '</strong></td><td class="num-cell">' + pctRango + '%</td><td class="num-cell">' + p.c + '</td><td class="num-cell">' + pctContacto + '%</td><td class="num-cell">' + p.a + '</td></tr>';
+  });
+  html += '</tbody></table>';
+  openModal(title, html, proms.length + ' promotoras | ' + totalLeads + ' leads | ' + proms.reduce((s,p) => s+p.c, 0) + ' contactados');
+}
+
+function openModal(title, html, footer) {
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBody').innerHTML = html;
+  document.getElementById('modalFooter').textContent = footer || '';
+  document.getElementById('modalOverlay').classList.add('active');
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('active'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function showLoginDetail(dayIndex, datasetIndex) {
+  const day = LOGIN_DETAIL[dayIndex];
+  if (!day) return;
+  const isLogins = datasetIndex === 0;
+  const title = isLogins
+    ? day.fecha + ' — Logins Exitosos (' + day.promotoras.reduce((s,p) => s + p.l, 0) + ' total)'
+    : day.fecha + ' — Promotoras Unicas (' + day.promotoras.length + ')';
+  let html = '<table><thead><tr><th style="width:40px">#</th><th>Nombre</th>';
+  if (isLogins) html += '<th class="num-cell">Logins</th>';
+  html += '</tr></thead><tbody>';
+  day.promotoras.forEach((p, i) => {
+    html += '<tr><td>' + (i+1) + '</td><td>' + p.n + '</td>';
+    if (isLogins) html += '<td class="num-cell">' + p.l + '</td>';
+    html += '</tr>';
+  });
+  html += '</tbody></table>';
+  const footer = isLogins
+    ? day.promotoras.length + ' promotoras, ' + day.promotoras.reduce((s,p) => s + p.l, 0) + ' logins totales'
+    : day.promotoras.length + ' promotoras unicas';
+  openModal(title, html, footer);
+}
+
+// Logins por dia
+const chartLoginsDia = new Chart(C('chartLoginsDia'), {
+  type: 'bar',
+  data: {
+    labels: ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16'],
+    datasets: [{
+      label: 'Logins exitosos',
+      data: [233,303,287,318,146,39,233,234,147,165,202,100,25,185,169,195],
+      backgroundColor: COLORS.primary, borderRadius: 4,
+    },{
+      label: 'Promotoras unicas',
+      data: [28,32,31,25,22,15,26,21,18,17,18,16,9,19,19,27],
+      backgroundColor: COLORS.accent, borderRadius: 4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'top' }, tooltip: { callbacks: { afterBody: () => '\nClick para ver detalle' } } },
+    scales: { y: { beginAtZero: true } },
+    onClick: (evt, elements) => {
+      if (elements.length > 0) {
+        const el = elements[0];
+        showLoginDetail(el.index, el.datasetIndex);
+      }
+    }
+  }
+});
+
+// Dispositivos
+new Chart(C('chartDispositivos'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Android/Chrome','Windows/Chrome','iOS/Safari','Android/Samsung','macOS/Chrome','Otros'],
+    datasets: [{ data: [67,56,45,9,9,12], backgroundColor: [COLORS.green, COLORS.blue, COLORS.primary, COLORS.orange, COLORS.purple, '#bdc3c7'] }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { font: { size: 11 } } } } }
+});
+
+// Marcaciones por dia
+new Chart(C('chartMarcDia'), {
+  type: 'line',
+  data: {
+    labels: ['01','02','03','04','05','07','08','09','10','11','12','14','15','16'],
+    datasets: [{
+      label: 'Check-in', data: [31,31,37,34,30,31,29,28,30,35,18,23,25,27],
+      borderColor: COLORS.green, backgroundColor: 'rgba(39,174,96,0.1)', fill: true, tension: 0.3
+    },{
+      label: 'Check-out', data: [29,31,35,33,27,28,27,28,29,27,17,22,23,6],
+      borderColor: COLORS.blue, backgroundColor: 'rgba(52,152,219,0.1)', fill: true, tension: 0.3
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+});
+
+// Tardanzas
+new Chart(C('chartTardanzas'), {
+  type: 'bar',
+  data: {
+    labels: ['01','02','03','04','05','07','08','09','10','11','12','14','15','16'],
+    datasets: [{
+      label: 'A tiempo', data: [16,19,18,19,10,22,15,17,17,18,7,15,12,8],
+      backgroundColor: COLORS.green, borderRadius: 4
+    },{
+      label: 'Con tardanza', data: [15,12,19,15,20,9,14,11,13,17,11,8,13,19],
+      backgroundColor: COLORS.red, borderRadius: 4
+    }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' } }, scales: { x: { stacked: true }, y: { stacked: true, beginAtZero: true } } }
+});
+
+// Leads por dia
+new Chart(C('chartLeadsDia'), {
+  type: 'bar',
+  data: {
+    labels: ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16'],
+    datasets: [{
+      label: 'Leads',
+      data: [505,400,344,350,263,0,232,200,186,192,190,159,0,176,169,88],
+      backgroundColor: (ctx) => ctx.raw > 300 ? COLORS.green : ctx.raw > 100 ? COLORS.blue : COLORS.orange,
+      borderRadius: 4,
+    },{
+      label: 'Promotoras',
+      data: [31,31,35,26,27,0,31,22,17,22,26,14,0,17,14,8],
+      type: 'line', borderColor: COLORS.accent, backgroundColor: 'transparent', yAxisID: 'y1', pointRadius: 4, tension: 0.3
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: { y: { beginAtZero: true, title: { display: true, text: 'Leads' } }, y1: { position: 'right', beginAtZero: true, title: { display: true, text: 'Promotoras' }, grid: { display: false } } }
+  }
+});
+
+// Leads por hora
+new Chart(C('chartLeadsHora'), {
+  type: 'bar',
+  data: {
+    labels: ['7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'],
+    datasets: [{ label: 'Leads', data: [3,16,200,482,547,588,245,173,302,241,271,236,72,66,7,4,5], backgroundColor: COLORS.blue, borderRadius: 4 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+// Leads por dia de semana
+new Chart(C('chartLeadsDow'), {
+  type: 'bar',
+  data: {
+    labels: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+    datasets: [{ label: 'Leads', data: [1,409,872,675,536,541,424], backgroundColor: [COLORS.orange, COLORS.blue, COLORS.green, COLORS.blue, COLORS.blue, COLORS.blue, COLORS.teal], borderRadius: 4 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+// Leads distribucion — por numero de promotoras
+new Chart(C('chartLeadsDistrib'), {
+  type: 'doughnut',
+  data: {
+    labels: ['200+ (1)','100-199 (12)','50-99 (15)','20-49 (9)','10-19 (3)','1-9 (3)'],
+    datasets: [{ data: [1,12,15,9,3,3], backgroundColor: [COLORS.green, COLORS.blue, COLORS.teal, COLORS.orange, COLORS.red, '#bdc3c7'] }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'right', labels: { font: { size: 11 } } },
+      tooltip: { callbacks: {
+        label: (ctx) => {
+          const leads = [294,1705,1044,345,41,15];
+          return ctx.label + ': ' + ctx.raw + ' promotoras, ' + leads[ctx.dataIndex].toLocaleString() + ' leads';
+        }
+      }}
+    }
+  }
+});
+
+// Scans por dia
+new Chart(C('chartScansDia'), {
+  type: 'bar',
+  data: {
+    labels: ['01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16'],
+    datasets: [{
+      label: 'Escaneos publicos',
+      data: [330,336,205,201,289,35,108,73,128,165,137,126,24,160,103,39],
+      backgroundColor: COLORS.teal, borderRadius: 4,
+    },{
+      label: 'Tokens unicos',
+      data: [31,35,35,50,33,19,32,28,34,43,37,22,16,38,28,19],
+      type: 'line', borderColor: COLORS.accent, backgroundColor: 'transparent', yAxisID: 'y1', pointRadius: 4, tension: 0.3
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    scales: { y: { beginAtZero: true, title: { display: true, text: 'Escaneos' } }, y1: { position: 'right', beginAtZero: true, title: { display: true, text: 'Tokens' }, grid: { display: false } } }
+  }
+});
+
+// Scans por hora
+new Chart(C('chartScansHora'), {
+  type: 'bar',
+  data: {
+    labels: ['0','1','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23'],
+    datasets: [{ label: 'Escaneos', data: [6,3,5,3,8,21,20,116,297,265,238,191,206,212,208,195,147,89,72,79,37,36], backgroundColor: COLORS.teal, borderRadius: 4 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+
+// Scans por dia de semana
+new Chart(C('chartScansDow'), {
+  type: 'bar',
+  data: {
+    labels: ['Dom','Lun','Mar','Mie','Jue','Vie','Sab'],
+    datasets: [{ label: 'Escaneos', data: [59,269,506,497,370,338,415], backgroundColor: [COLORS.orange, COLORS.teal, COLORS.green, COLORS.teal, COLORS.teal, COLORS.teal, COLORS.blue], borderRadius: 4 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true } } }
+});
+</script>
+
+</body>
+</html>
